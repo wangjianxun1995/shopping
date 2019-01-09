@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from users.models import User
+from users.serializers import RegiserUserSerializer
 
 """
 前端发送用户给后端  我们后端判断用户 是否注册
@@ -40,3 +41,21 @@ class RegisPhoneCountAPIView(APIView):
             'phone':mobile
         }
         return Response(context)
+
+"""
+
+
+"""
+
+class RegiserUserAPIView(APIView):
+    def post(self,request):
+        #1.接受参数
+        data = request.data
+        #2.校验参数
+        serializer = RegiserUserSerializer(data=data)
+        serializer.is_valid(raise_exception = True)
+        #3.数据入库
+        serializer.save()
+        #4.返回响应
+        return Response(serializer.data)
+

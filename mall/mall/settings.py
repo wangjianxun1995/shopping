@@ -24,8 +24,17 @@ SECRET_KEY = '(j)8=nxauq1w@mxp^&-6j8$^ds@y-syr9i_u2j5rhb^)w#eg-h'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# CORS
+# 白名单允许 谁 跨域 请求
+CORS_ORIGIN_WHITELIST = (
+    '127.0.0.1:8080',
+    'localhost:8080',
+    'www.meiduo.site:8080'
+)
+CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
 
-ALLOWED_HOSTS = []
+#允许哪些主机访问
+ALLOWED_HOSTS = ['127.0.0.1','api.meiduo.site']
 
 
 # Application definition
@@ -43,10 +52,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users.apps.UsersConfig'
+    'users.apps.UsersConfig',
+    'corsheaders',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -54,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'mall.urls'
@@ -203,6 +217,7 @@ REST_FRAMEWORK = {
 }
 
 
-#1.我们下要替换系统的User需要通过设置AUTH_USER_MODEL来实现
+#1.我们下要替换系统的User需
+# 要通过设置AUTH_USER_MODEL来实现
 #2.子应用.模型类名  只能有一个 “.” 系统是根据点来区分的
 AUTH_USER_MODEL = 'users.User'
