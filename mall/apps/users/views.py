@@ -59,3 +59,5 @@ class RegiserUserAPIView(APIView):
         #4.返回响应
         return Response(serializer.data)
 
+
+

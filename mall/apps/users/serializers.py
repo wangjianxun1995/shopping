@@ -12,6 +12,8 @@ class RegiserUserSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(label='校验密码', allow_null=False, allow_blank=False, write_only=True)
     sms_code = serializers.CharField(label='短信验证码', max_length=6, min_length=6, allow_null=False, allow_blank=False,write_only=True)
     allow = serializers.CharField(label='是否同意协议', allow_null=False, allow_blank=False, write_only=True)
+
+    token =serializers.CharField(label='token',read_only=True)
     """
     ModelSerializer 自动生产字段的过程
     会对fields 进行便利，先去model中哦查看是否有相应的字段
@@ -19,7 +21,7 @@ class RegiserUserSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = User
-        fields = ['id','mobile','username','password','allow','sms_code','password2']
+        fields = ['id','token','mobile','username','password','allow','sms_code','password2']
         extra_kwargs = {
             'id': {'read_only': True},
             'username': {
@@ -91,5 +93,22 @@ class RegiserUserSerializer(serializers.ModelSerializer):
         # print(user)
         user.set_password(validated_data['password'])
         user.save()
+        """
+        当用户注册成功之后，自动登录
+
+        自动登录的功能是要求用户注册成功之后 返回数据的时候需要额外添加一个token
+
+        1.序列话的时候添加token
+        2.token 怎么生成---->入库之后生产touken
+        """
+        #用户入库之后生产token
+        from rest_framework_jwt.settings import api_settings
+        # 需要使用jwt 的两个方法
+        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+        # 让payload（载荷）成放一些用户信息
+        payload = jwt_payload_handler(user)
+        token = jwt_encode_handler(payload)
+        user.token = token
         return user
 

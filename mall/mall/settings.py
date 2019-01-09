@@ -29,7 +29,8 @@ DEBUG = True
 CORS_ORIGIN_WHITELIST = (
     '127.0.0.1:8080',
     'localhost:8080',
-    'www.meiduo.site:8080'
+    'www.meiduo.site:8080',
+    '127.0.0.1:8000'
 )
 CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
 
@@ -214,6 +215,15 @@ LOGGING = {
 REST_FRAMEWORK = {
     # 异常处理
     'EXCEPTION_HANDLER': 'utils.exceptions.exception_handler',
+
+    #认证方式
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        #把jwt 认证放到最上面，优先选择jwt认证
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        #如果没有设置jwt在选择session认证
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
 }
 
 
@@ -221,3 +231,12 @@ REST_FRAMEWORK = {
 # 要通过设置AUTH_USER_MODEL来实现
 #2.子应用.模型类名  只能有一个 “.” 系统是根据点来区分的
 AUTH_USER_MODEL = 'users.User'
+# 设置JWT
+import datetime
+JWT_AUTH = {
+
+    'JWT_RESPONSE_PAYLOAD_HANDLER':
+    'utils.users.jwt_response_payload_handler',
+    #设置token 有效期
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+}
