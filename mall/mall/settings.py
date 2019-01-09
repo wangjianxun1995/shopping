@@ -240,3 +240,9 @@ JWT_AUTH = {
     #设置token 有效期
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
 }
+
+
+#修改默认认证后端
+AUTHENTICATION_BACKENDS = [
+    'utils.users.UsernameMobleModelBackend',
+]
