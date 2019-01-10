@@ -56,4 +56,5 @@ class OAuthQQUserAPIView(APIView):
         token = OAuthQQ.get_access_token(code)
 
         # 3.用token换openid
+        openid = OAuthQQ.get_open_id(token)
         pass
